@@ -54,8 +54,8 @@
 - **Hypothesis**: A stronger latent bottleneck may improve early smoke-tier dog-run planning stability by filtering high-dimensional proprioceptive noise and reducing planner/model complexity.
 - **Protocol Audit**: Evaluation task, reward, metric, and evaluation script are unchanged. This is a model-capacity/representation probe, not reward shaping or dataset leakage.
 - **Implementation Sketch**: Train `task=dog-run model_size=1 steps=50000 seed=1 exp_name=iter2_abstraction_m1_steps50000 enable_wandb=false save_video=false compile=false`, then evaluate with the same one-episode smoke-tier command and absolute checkpoint path.
-- **Status**: IN-PROGRESS
-- **Result**: Background run launched; result pending.
+- **Status**: SUCCESS
+- **Result**: Background run completed with one-episode reward 55.2 at 50000 steps. This is improved versus earlier short smoke baselines, but not yet a fair comparison against original `model_size=5` at the same 50000-step budget.
 
 ### IDEA-005: Human Prior - Discrete Latent Codebook Abstraction
 - **Origin**: Human prior
