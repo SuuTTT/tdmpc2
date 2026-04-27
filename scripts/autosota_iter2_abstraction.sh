@@ -15,6 +15,9 @@ BEST_REWARD=6.3
 cd "$REPO"
 mkdir -p logs/autosota
 
+export TORCHDYNAMO_DISABLE=1
+export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
+
 START_TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 PRE_COMMIT="$(git rev-parse HEAD)"
 RUN_LOG="logs/autosota/${EXP_NAME}.log"
@@ -31,6 +34,7 @@ CHECKPOINT="$REPO/logs/${TASK}/${SEED}/${EXP_NAME}/models/final.pt"
   echo "checkpoint=${CHECKPOINT}"
 } > "logs/autosota/${EXP_NAME}_meta.txt"
 
+echo "starting_train $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$RUN_LOG"
 mamba run -n "$ENV_NAME" python tdmpc2/train.py \
   task="$TASK" \
   model_size="$MODEL_SIZE" \
@@ -39,14 +43,26 @@ mamba run -n "$ENV_NAME" python tdmpc2/train.py \
   exp_name="$EXP_NAME" \
   enable_wandb=false \
   save_video=false \
-  compile=false 2>&1 | tee "$RUN_LOG"
+  compile=false 2>&1 | tee -a "$RUN_LOG"
+train_status=${PIPESTATUS[0]}
+echo "train_exit=${train_status} $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$RUN_LOG"
+if [ "$train_status" -ne 0 ]; then
+  exit "$train_status"
+fi
 
+echo "starting_eval $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$EVAL_LOG"
 mamba run -n "$ENV_NAME" python tdmpc2/evaluate.py \
   task="$TASK" \
   model_size="$MODEL_SIZE" \
   checkpoint="$CHECKPOINT" \
   eval_episodes=1 \
-  save_video=false 2>&1 | tee "$EVAL_LOG"
+  save_video=false \
+  compile=false 2>&1 | tee -a "$EVAL_LOG"
+eval_status=${PIPESTATUS[0]}
+echo "eval_exit=${eval_status} $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$EVAL_LOG"
+if [ "$eval_status" -ne 0 ]; then
+  exit "$eval_status"
+fi
 
 python - <<'PY'
 import json
