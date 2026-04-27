@@ -5,9 +5,9 @@ task: "dog-run"
 metric:
   name: "episode_reward"
   direction: "higher_is_better"
-official_eval_command: "python tdmpc2/evaluate.py task=dog-run checkpoint=logs/dog-run/1/default/models/final.pt eval_episodes=1 save_video=false"
+official_eval_command: "python tdmpc2/evaluate.py task=dog-run model_size=5 checkpoint=/workspace/tdmpc2-codex/logs/dog-run/1/default/models/final.pt eval_episodes=1 save_video=false"
 train_command: "python tdmpc2/train.py task=dog-run model_size=5 steps=1000 seed=1"
-validation_command: "python tdmpc2/evaluate.py task=dog-run checkpoint=logs/dog-run/1/default/models/final.pt eval_episodes=1 save_video=false"
+validation_command: "python tdmpc2/evaluate.py task=dog-run model_size=5 checkpoint=/workspace/tdmpc2-codex/logs/dog-run/1/default/models/final.pt eval_episodes=1 save_video=false"
 dataset:
   train: "online"
   validation: "online"

@@ -11,8 +11,8 @@
 - **Hypothesis**: A short run will produce a checkpoint and measurable reward, enabling safe Scheduler iteration.
 - **Protocol Audit**: Smoke tier only; not claimed as paper reproduction.
 - **Implementation Sketch**: Run `train_command`, then `validation_command`.
-- **Status**: PENDING
-- **Result**: TBD
+- **Status**: SUCCESS
+- **Result**: Baseline smoke run completed with 1000 training steps; one-episode validation reward was 6.3.
 
 ### IDEA-002: Increase Smoke Training Steps
 - **Granularity**: PARAM
