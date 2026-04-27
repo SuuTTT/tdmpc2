@@ -41,3 +41,48 @@
 - **Implementation Sketch**: Compare default horizon against one nearby value after baseline.
 - **Status**: PENDING
 - **Result**: TBD
+
+### IDEA-004: Human Prior - Latent Bottleneck Abstraction Probe
+- **Origin**: Human prior
+- **Granularity**: PARAM
+- **Risk**: LOW
+- **Admissibility**: CLEARED
+- **Priority**: HIGH
+- **Metric Target**: episode_reward
+- **Lever**: `model_size=1` in TD-MPC2, which sets `latent_dim=128` instead of the `model_size=5` baseline latent dimension of 512.
+- **Evidence**: User prior plus TD-MPC2's existing model-size abstraction knob. Related literature supports latent/discrete/hierarchical abstraction, but TD-MPC2 itself also benefits from scale, so this must be tested empirically.
+- **Hypothesis**: A stronger latent bottleneck may improve early smoke-tier dog-run planning stability by filtering high-dimensional proprioceptive noise and reducing planner/model complexity.
+- **Protocol Audit**: Evaluation task, reward, metric, and evaluation script are unchanged. This is a model-capacity/representation probe, not reward shaping or dataset leakage.
+- **Implementation Sketch**: Train `task=dog-run model_size=1 steps=50000 seed=1 exp_name=iter2_abstraction_m1_steps50000 enable_wandb=false save_video=false compile=false`, then evaluate with the same one-episode smoke-tier command and absolute checkpoint path.
+- **Status**: IN-PROGRESS
+- **Result**: Background run launched; result pending.
+
+### IDEA-005: Human Prior - Discrete Latent Codebook Abstraction
+- **Origin**: Human prior
+- **Granularity**: ALGO
+- **Risk**: HIGH
+- **Admissibility**: REVIEW
+- **Priority**: MEDIUM
+- **Metric Target**: episode_reward
+- **Lever**: Encoder/world-model latent representation in `tdmpc2/common/world_model.py` and `tdmpc2/common/layers.py`.
+- **Evidence**: Discrete Codebook World Models report benefits of discrete stochastic latent states for continuous control and compare against TD-MPC2-style continuous latent models.
+- **Hypothesis**: Adding a discrete/codebook bottleneck could improve control-relevant abstraction and planner robustness.
+- **Protocol Audit**: Potentially admissible if evaluation semantics are unchanged, but high-risk because it changes the core world-model representation.
+- **Implementation Sketch**: Prototype only after low-risk bottleneck and horizon probes; require AgentSupervisor review before execution.
+- **Status**: PENDING
+- **Result**: TBD
+
+### IDEA-006: Human Prior - Temporal Abstraction Planner
+- **Origin**: Human prior
+- **Granularity**: ALGO
+- **Risk**: HIGH
+- **Admissibility**: REVIEW
+- **Priority**: LOW
+- **Metric Target**: episode_reward
+- **Lever**: Planner in `tdmpc2/tdmpc2.py`, especially action sequence sampling and horizon semantics.
+- **Evidence**: Latent temporal-abstraction planning work argues that primitive-timescale planning can be costly and brittle for long-horizon continuous control.
+- **Hypothesis**: Planning over short action chunks or latent macro-actions may improve long-horizon dog-run coordination.
+- **Protocol Audit**: Requires careful review because it changes planning semantics; reward and evaluation must remain frozen.
+- **Implementation Sketch**: Defer until smoke baseline and lower-risk abstraction probes are complete.
+- **Status**: PENDING
+- **Result**: TBD
