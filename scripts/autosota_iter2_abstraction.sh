@@ -35,6 +35,7 @@ CHECKPOINT="$REPO/logs/${TASK}/${SEED}/${EXP_NAME}/models/final.pt"
 } > "logs/autosota/${EXP_NAME}_meta.txt"
 
 echo "starting_train $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$RUN_LOG"
+set +e
 mamba run -n "$ENV_NAME" python tdmpc2/train.py \
   task="$TASK" \
   model_size="$MODEL_SIZE" \
@@ -45,12 +46,14 @@ mamba run -n "$ENV_NAME" python tdmpc2/train.py \
   save_video=false \
   compile=false 2>&1 | tee -a "$RUN_LOG"
 train_status=${PIPESTATUS[0]}
+set -e
 echo "train_exit=${train_status} $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$RUN_LOG"
 if [ "$train_status" -ne 0 ]; then
   exit "$train_status"
 fi
 
 echo "starting_eval $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$EVAL_LOG"
+set +e
 mamba run -n "$ENV_NAME" python tdmpc2/evaluate.py \
   task="$TASK" \
   model_size="$MODEL_SIZE" \
@@ -59,6 +62,7 @@ mamba run -n "$ENV_NAME" python tdmpc2/evaluate.py \
   save_video=false \
   compile=false 2>&1 | tee -a "$EVAL_LOG"
 eval_status=${PIPESTATUS[0]}
+set -e
 echo "eval_exit=${eval_status} $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$EVAL_LOG"
 if [ "$eval_status" -ne 0 ]; then
   exit "$eval_status"
