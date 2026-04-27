@@ -1,0 +1,15 @@
+{
+  "checkpoint": "logs/dog-run/1/iter2_abstraction_m1_steps50000/models/final.pt",
+  "decision": "IMPROVED",
+  "idea_id": "IDEA-004",
+  "iteration": 2,
+  "logs": [
+    "logs/autosota/iter2_abstraction_m1_steps50000.log",
+    "logs/autosota/iter2_abstraction_m1_steps50000_eval.log"
+  ],
+  "mode": "background_optimization",
+  "paper_id": "tdmpc2-codex-dog-run",
+  "phase": "iteration_completed",
+  "reward": 55.2,
+  "updated_at": "2026-04-27T16:07:14Z"
+}
