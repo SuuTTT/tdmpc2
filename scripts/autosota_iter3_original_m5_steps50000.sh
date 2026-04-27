@@ -3,6 +3,7 @@ set -euo pipefail
 
 REPO=/workspace/tdmpc2-codex
 ENV_NAME=tdmpc2
+MAMBA_BIN=/opt/miniforge3/condabin/mamba
 ITER=3
 IDEA_ID=COMPARATOR-M5-50000
 EXP_NAME=iter3_original_m5_steps50000
@@ -37,7 +38,7 @@ CHECKPOINT="$REPO/logs/${TASK}/${SEED}/${EXP_NAME}/models/final.pt"
 
 echo "starting_train $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$RUN_LOG"
 set +e
-mamba run -n "$ENV_NAME" python tdmpc2/train.py \
+"$MAMBA_BIN" run -n "$ENV_NAME" python tdmpc2/train.py \
   task="$TASK" \
   model_size="$MODEL_SIZE" \
   steps="$STEPS" \
@@ -55,7 +56,7 @@ fi
 
 echo "starting_eval $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a "$EVAL_LOG"
 set +e
-mamba run -n "$ENV_NAME" python tdmpc2/evaluate.py \
+"$MAMBA_BIN" run -n "$ENV_NAME" python tdmpc2/evaluate.py \
   task="$TASK" \
   model_size="$MODEL_SIZE" \
   checkpoint="$CHECKPOINT" \
