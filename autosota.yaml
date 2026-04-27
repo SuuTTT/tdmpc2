@@ -1,0 +1,27 @@
+project: "tdmpc2-codex"
+paper: "TD-MPC2: Scalable, Robust World Models for Continuous Control"
+benchmark: "DMControl"
+task: "dog-run"
+metric:
+  name: "episode_reward"
+  direction: "higher_is_better"
+official_eval_command: "python tdmpc2/evaluate.py task=dog-run checkpoint=logs/dog-run/1/default/models/final.pt eval_episodes=1 save_video=false"
+train_command: "python tdmpc2/train.py task=dog-run model_size=5 steps=1000 seed=1"
+validation_command: "python tdmpc2/evaluate.py task=dog-run checkpoint=logs/dog-run/1/default/models/final.pt eval_episodes=1 save_video=false"
+dataset:
+  train: "online"
+  validation: "online"
+  test: "online"
+frozen:
+  metric_code:
+    - "tdmpc2/evaluate.py"
+    - "tdmpc2/envs/"
+  test_data: []
+  label_files: []
+seeds: [1]
+budget:
+  max_iterations: 3
+  smoke_train_steps: 1000
+outputs:
+  runs_dir: "logs"
+  logs_dir: "logs"
