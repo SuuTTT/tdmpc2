@@ -25,8 +25,8 @@
 - **Hypothesis**: A modest step increase may improve reward while keeping iteration cost manageable.
 - **Protocol Audit**: Valid within smoke tier if clearly recorded.
 - **Implementation Sketch**: Test `steps=5000` or `steps=10000`.
-- **Status**: PENDING
-- **Result**: TBD
+- **Status**: FAILED
+- **Result**: Tested a cheaper 2000-step variant first; one-episode validation reward was 6.3, matching baseline and not improving `_best`.
 
 ### IDEA-003: Tune Planning Horizon
 - **Granularity**: PARAM
