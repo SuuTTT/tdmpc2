@@ -1,0 +1,14 @@
+{
+  "abstraction_reward": 50.5,
+  "decision": "ABSTRACTION_VALIDATED",
+  "iteration": 4,
+  "logs": [
+    "logs/autosota/iter4_validate_abstraction_m1_eval10.log",
+    "logs/autosota/iter4_validate_original_m5_eval10.log"
+  ],
+  "mode": "robustness_validation",
+  "original_reward": 29.3,
+  "paper_id": "tdmpc2-codex-dog-run",
+  "phase": "validation_completed",
+  "updated_at": "2026-04-28T05:05:41Z"
+}
