@@ -1,0 +1,14 @@
+{
+  "decision": "FASTPLANNER_COMPETITIVE",
+  "iteration": 5,
+  "logs": [
+    "logs/autosota/iter5_fastplanner_m1_steps50000.log",
+    "logs/autosota/iter5_fastplanner_m1_steps50000_eval10.log"
+  ],
+  "mode": "speed_optimization",
+  "paper_id": "tdmpc2-codex-dog-run",
+  "phase": "speed_probe_completed",
+  "reward": 47.8,
+  "train_time": "1:18:17",
+  "updated_at": "2026-04-28T07:07:03Z"
+}
