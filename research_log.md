@@ -106,3 +106,22 @@ Interpretation:
 
 - If `model_size=5, steps=50000` beats `55.2`, then the abstraction/bottleneck hypothesis is not supported under this smoke tier.
 - If `model_size=1, steps=50000` remains competitive or better, then the human abstraction prior has real evidence and should be followed by stronger evaluation, preferably `eval_episodes=5` or `10`.
+
+## 2026-04-28: Validation and Speed Follow-Up
+
+- The 10-episode validation completed:
+  - `model_size=1`, `50000` steps: reward `50.5`.
+  - `model_size=5`, `50000` steps: reward `29.3`.
+- The abstraction/bottleneck probe remains ahead under the matched 50k-step validation tier.
+- Runtime remains the bottleneck: 50k steps takes roughly 1.5 hours on the current RTX 3060 instance.
+- Next scheduled idea is `IDEA-007`, a planner-cost reduction probe:
+  - `model_size=1`
+  - `steps=50000`
+  - `num_samples=256`
+  - `num_elites=32`
+  - `num_pi_trajs=12`
+  - `iterations=4`
+  - `eval_episodes=10`
+- Success criterion:
+  - materially lower wall-clock runtime than the default `model_size=1` 50k run.
+  - reward remains competitive with the validated abstraction score of `50.5`.

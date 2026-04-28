@@ -86,3 +86,18 @@
 - **Implementation Sketch**: Defer until smoke baseline and lower-risk abstraction probes are complete.
 - **Status**: PENDING
 - **Result**: TBD
+
+### IDEA-007: Planner-Cost Reduction for Faster Abstraction Runs
+- **Origin**: Scheduler follow-up
+- **Granularity**: PARAM
+- **Risk**: MEDIUM
+- **Admissibility**: CLEARED
+- **Priority**: HIGH
+- **Metric Target**: episode_reward and wall-clock runtime
+- **Lever**: TD-MPC2 planner parameters: `num_samples`, `num_elites`, `num_pi_trajs`, and `iterations`.
+- **Evidence**: `dog-run` action dimension triggers extra MPPI iterations in `tdmpc2/tdmpc2.py`; reducing planner samples and iterations should reduce action-selection cost during online training.
+- **Hypothesis**: For early 50k-step search, `model_size=1 num_samples=256 num_elites=32 num_pi_trajs=12 iterations=4` may keep enough planning quality while materially reducing wall-clock runtime versus the default `model_size=1` abstraction run.
+- **Protocol Audit**: Evaluation task, reward, metric, and evaluation script are unchanged. This is a planner-cost optimization, not a change to benchmark semantics.
+- **Implementation Sketch**: Train `task=dog-run model_size=1 steps=50000 seed=1 exp_name=iter5_fastplanner_m1_steps50000 num_samples=256 num_elites=32 num_pi_trajs=12 iterations=4 enable_wandb=false save_video=false compile=false`, then evaluate with `eval_episodes=10`.
+- **Status**: IN-PROGRESS
+- **Result**: Background run launched; result pending.
