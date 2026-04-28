@@ -1,0 +1,14 @@
+{
+  "checkpoint": "logs/dog-run/1/iter3_original_m5_steps50000/models/final.pt",
+  "decision": "ABSTRACTION_REMAINS_AHEAD",
+  "iteration": 3,
+  "logs": [
+    "logs/autosota/iter3_original_m5_steps50000.log",
+    "logs/autosota/iter3_original_m5_steps50000_eval.log"
+  ],
+  "mode": "background_comparator",
+  "paper_id": "tdmpc2-codex-dog-run",
+  "phase": "matched_comparator_completed",
+  "reward": 27.5,
+  "updated_at": "2026-04-28T04:54:48Z"
+}
