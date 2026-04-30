@@ -19,6 +19,7 @@ class TDMPC2(torch.nn.Module):
 		super().__init__()
 		self.cfg = cfg
 		self.device = torch.device('cuda:0')
+		self.register_buffer("_ib_log_simnorm_dim", torch.log(torch.tensor(float(cfg.simnorm_dim), device=self.device)))
 		self.model = WorldModel(cfg).to(self.device)
 		self.optim = torch.optim.Adam([
 			{'params': self.model._encoder.parameters(), 'lr': self.cfg.lr*self.cfg.enc_lr_scale},
@@ -257,6 +258,34 @@ class TDMPC2(torch.nn.Module):
 		discount = self.discount[task].unsqueeze(-1) if self.cfg.multitask else self.discount
 		return reward + discount * (1-terminated) * self.model.Q(next_z, action, task, return_type='min', target=True)
 
+	def _latent_ib_loss(self, z):
+		"""
+		Information-bottleneck proxy for SimNorm latents.
+		Minimizes KL(q(z|x) || uniform) within each simplex group, reducing
+		observation-specific information carried by the latent representation.
+		"""
+		z = z.clamp_min(1e-8)
+		z = z.view(*z.shape[:-1], -1, self.cfg.simnorm_dim)
+		kl_to_uniform = (z * (z.log() + self._ib_log_simnorm_dim)).sum(-1)
+		return kl_to_uniform.mean()
+
+	def _structural_entropy_loss(self, zs):
+		"""
+		One-level soft structural entropy over latent transition flow.
+		Vertices are rollout latent states, edges are consecutive latent
+		transitions, and modules are SimNorm symbols aggregated across groups.
+		"""
+		assignments = zs.view(*zs.shape[:-1], -1, self.cfg.simnorm_dim).mean(-2)
+		source = assignments[:-1].reshape(-1, self.cfg.simnorm_dim)
+		target = assignments[1:].reshape(-1, self.cfg.simnorm_dim)
+		flow = source.transpose(0, 1).matmul(target) / source.shape[0]
+		volume = flow.sum(0) + flow.sum(1)
+		internal = flow.diag()
+		cut = (volume - 2 * internal).clamp_min(0)
+		total_volume = volume.sum().clamp_min(1e-8)
+		ratio = (volume / total_volume).clamp_min(1e-8)
+		return -(cut / total_volume * ratio.log()).sum()
+
 	def _update(self, obs, action, reward, terminated, task=None):
 		# Compute targets
 		with torch.no_grad():
@@ -270,11 +299,14 @@ class TDMPC2(torch.nn.Module):
 		zs = torch.empty(self.cfg.horizon+1, self.cfg.batch_size, self.cfg.latent_dim, device=self.device)
 		z = self.model.encode(obs[0], task)
 		zs[0] = z
+		ib_loss = self._latent_ib_loss(z)
 		consistency_loss = 0
 		for t, (_action, _next_z) in enumerate(zip(action.unbind(0), next_z.unbind(0))):
 			z = self.model.next(z, _action, task)
 			consistency_loss = consistency_loss + F.mse_loss(z, _next_z) * self.cfg.rho**t
+			ib_loss = ib_loss + self._latent_ib_loss(_next_z) * self.cfg.rho**t
 			zs[t+1] = z
+		se_loss = self._structural_entropy_loss(zs)
 
 		# Predictions
 		_zs = zs[:-1]
@@ -291,6 +323,7 @@ class TDMPC2(torch.nn.Module):
 				value_loss = value_loss + math.soft_ce(qs_unbind_unbind, td_targets_unbind, self.cfg).mean() * self.cfg.rho**t
 
 		consistency_loss = consistency_loss / self.cfg.horizon
+		ib_loss = ib_loss / (self.cfg.horizon + 1)
 		reward_loss = reward_loss / self.cfg.horizon
 		if self.cfg.episodic:
 			termination_loss = F.binary_cross_entropy_with_logits(termination_pred, terminated)
@@ -301,7 +334,9 @@ class TDMPC2(torch.nn.Module):
 			self.cfg.consistency_coef * consistency_loss +
 			self.cfg.reward_coef * reward_loss +
 			self.cfg.termination_coef * termination_loss +
-			self.cfg.value_coef * value_loss
+			self.cfg.value_coef * value_loss +
+			self.cfg.ib_coef * ib_loss +
+			self.cfg.se_coef * se_loss
 		)
 
 		# Update model
@@ -323,6 +358,8 @@ class TDMPC2(torch.nn.Module):
 			"reward_loss": reward_loss,
 			"value_loss": value_loss,
 			"termination_loss": termination_loss,
+			"ib_loss": ib_loss,
+			"se_loss": se_loss,
 			"total_loss": total_loss,
 			"grad_norm": grad_norm,
 		})

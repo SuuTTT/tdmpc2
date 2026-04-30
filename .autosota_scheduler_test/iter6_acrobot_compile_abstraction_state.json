@@ -1,0 +1,12 @@
+{
+  "compare_csv": "/workspace/tdmpc2-codex/results/tdmpc2-codex/acrobot-swingup_abstraction_compile_compare.csv",
+  "decision": "OFFICIAL_MEAN_AHEAD",
+  "iteration": 6,
+  "official_mean_reward_at_final_step": 662.8666666666667,
+  "phase": "completed",
+  "result_csv": "/workspace/tdmpc2-codex/results/tdmpc2-codex/acrobot-swingup_abstraction_compile.csv",
+  "reward": 643.4,
+  "run_log": "logs/autosota/iter6_acrobot_compile_abstraction_m1_steps4000000.log",
+  "train_time": "20:50:11",
+  "updated_at": "2026-04-29T06:53:44Z"
+}

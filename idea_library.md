@@ -99,5 +99,35 @@
 - **Hypothesis**: For early 50k-step search, `model_size=1 num_samples=256 num_elites=32 num_pi_trajs=12 iterations=4` may keep enough planning quality while materially reducing wall-clock runtime versus the default `model_size=1` abstraction run.
 - **Protocol Audit**: Evaluation task, reward, metric, and evaluation script are unchanged. This is a planner-cost optimization, not a change to benchmark semantics.
 - **Implementation Sketch**: Train `task=dog-run model_size=1 steps=50000 seed=1 exp_name=iter5_fastplanner_m1_steps50000 num_samples=256 num_elites=32 num_pi_trajs=12 iterations=4 enable_wandb=false save_video=false compile=false`, then evaluate with `eval_episodes=10`.
-- **Status**: IN-PROGRESS
-- **Result**: Background run launched; result pending.
+- **Status**: SUCCESS
+- **Result**: Completed with reward 47.8 over 10 evaluation episodes and train time 1:18:17. This is slightly below the validated default `model_size=1` abstraction score of 50.5, but competitive and faster than the rough 1.5-hour default runtime estimate.
+
+### IDEA-008: Information Bottleneck Latent Abstraction
+- **Origin**: Human follow-up
+- **Granularity**: ALGO
+- **Risk**: MEDIUM
+- **Admissibility**: CLEARED
+- **Priority**: HIGH
+- **Metric Target**: episode_reward
+- **Lever**: Add `ib_coef` to the TD-MPC2 world-model update. The loss penalizes KL from each SimNorm latent group to a uniform categorical prior.
+- **Evidence**: Information bottleneck methods encourage representations that preserve task-relevant predictive information while discarding nuisance detail. TD-MPC2 already uses grouped SimNorm latent probabilities, which gives a low-friction place to apply a KL-to-prior abstraction penalty.
+- **Hypothesis**: A small information-bottleneck coefficient may improve cross-task abstraction by regularizing the latent model beyond the simple `model_size=1` bottleneck.
+- **Protocol Audit**: Evaluation task, reward, and environment remain unchanged. This modifies the learned representation objective, so results should be compared against a same-task, same-step `model_size=1` run.
+- **Implementation Sketch**: Train `task=acrobot-swingup model_size=1 steps=400000 seed=1 eval_freq=100000 eval_episodes=10 ib_coef=0.01 compile=false exp_name=iter7_acrobot_ib_m1_steps400000`.
+- **Status**: READY
+- **Result**: Code and run script prepared. The run script waits for the active iteration 6 acrobot compile job before starting to avoid GPU contention.
+
+### IDEA-009: Structural Entropy Latent Transition Abstraction
+- **Origin**: Human follow-up via `structural-entropy-proposal` skill
+- **Granularity**: ALGO
+- **Risk**: MEDIUM
+- **Admissibility**: CLEARED
+- **Priority**: HIGH
+- **Metric Target**: episode_reward
+- **Lever**: Add `se_coef` to the TD-MPC2 world-model update. The loss builds a soft transition-flow graph over rollout latents and minimizes a one-level structural entropy proxy.
+- **Evidence**: Structural Entropy models uncertainty in graph/network structure through encoding trees. TD-MPC2 already learns latent transition dynamics, giving a natural graph: latent states as vertices and predicted transitions as edges.
+- **Hypothesis**: Encouraging low structural entropy in the latent transition flow can create more coherent macro-state modules, improving planning and early sample efficiency beyond capacity-only abstraction.
+- **Protocol Audit**: Evaluation task, reward, and environment remain unchanged. This changes representation training, so it must be compared against same-task, same-step `model_size=1` probes.
+- **Implementation Sketch**: Train `task=acrobot-swingup model_size=1 steps=400000 seed=1 eval_freq=100000 eval_episodes=10 se_coef=0.01 compile=false exp_name=iter8_acrobot_se_m1_steps400000`.
+- **Status**: READY
+- **Result**: Code, proposal, and run script prepared. The run script waits for iteration 7 to complete before starting to avoid GPU contention.

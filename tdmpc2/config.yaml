@@ -19,6 +19,8 @@ value_coef: 0.1
 termination_coef: 1
 consistency_coef: 20
 rho: 0.5
+ib_coef: 0.0
+se_coef: 0.0
 lr: 3e-4
 enc_lr_scale: 0.3
 grad_clip_norm: 20

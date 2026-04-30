@@ -1,0 +1,11 @@
+{
+  "compare_csv": "results/tdmpc2-codex/acrobot-swingup_se_abstraction_vastai_partial_compare.csv",
+  "iteration": 8,
+  "latest_reward": 564.7,
+  "latest_step": 300000,
+  "phase": "in_progress",
+  "result_csv": "results/tdmpc2-codex/acrobot-swingup_se_abstraction_vastai_partial.csv",
+  "run_log": "logs/acrobot-swingup/1/vastai_iter8_acrobot_se_m1_steps400000/eval.csv",
+  "train_time": null,
+  "updated_at": "2026-04-29T07:57:43Z"
+}
