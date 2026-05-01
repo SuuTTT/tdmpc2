@@ -288,6 +288,47 @@ class TDMPC2(torch.nn.Module):
 		ratio = (volume / total_volume).clamp_min(1e-8)
 		return -(cut / total_volume * ratio.log()).sum()
 
+	def _structural_entropy_2d_loss(self, zs):
+		"""
+		Two-level soft structural entropy over latent transition flow.
+		Modules are grouped into super-modules.
+		"""
+		assignments = zs.view(*zs.shape[:-1], -1, self.cfg.simnorm_dim).mean(-2)
+		source = assignments[:-1].reshape(-1, self.cfg.simnorm_dim)
+		target = assignments[1:].reshape(-1, self.cfg.simnorm_dim)
+		flow = source.transpose(0, 1).matmul(target) / source.shape[0]
+
+		# 1D SE components
+		volume = flow.sum(0) + flow.sum(1)
+		internal = flow.diag()
+		cut = (volume - 2 * internal).clamp_min(0)
+		total_volume = volume.sum().clamp_min(1e-8)
+
+		# Super-module mapping (fixed hard grouping for now)
+		K = self.cfg.simnorm_dim
+		M = getattr(self.cfg, "num_super_modules", 2)
+		P = torch.zeros(K, M, device=flow.device)
+		for k in range(K):
+			P[k, k // (K // M)] = 1.0
+
+		# Super-module flow matrix
+		flow2 = P.t().matmul(flow).matmul(P)
+		volume2 = flow2.sum(0) + flow2.sum(1)
+		internal2 = flow2.diag()
+		cut2 = (volume2 - 2 * internal2).clamp_min(0)
+
+		# Term 1: Super-module level
+		ratio2 = (volume2 / total_volume).clamp_min(1e-8)
+		term1 = -(cut2 / total_volume * ratio2.log()).sum()
+
+		# Term 2: Module level within super-modules
+		m_k = torch.arange(K, device=flow.device) // (K // M)
+		vol_Y = volume2[m_k]
+		ratio1 = (volume / vol_Y).clamp_min(1e-8)
+		term2 = -(cut / total_volume * ratio1.log()).sum()
+
+		return term1 + term2
+
 	def _update(self, obs, action, reward, terminated, task=None):
 		# Compute targets
 		with torch.no_grad():
@@ -308,7 +349,11 @@ class TDMPC2(torch.nn.Module):
 			consistency_loss = consistency_loss + F.mse_loss(z, _next_z) * self.cfg.rho**t
 			ib_loss = ib_loss + self._latent_ib_loss(_next_z) * self.cfg.rho**t
 			zs[t+1] = z
-		se_loss = self._structural_entropy_loss(zs)
+		
+		if getattr(self.cfg, "se_2d", False):
+			se_loss = self._structural_entropy_2d_loss(zs)
+		else:
+			se_loss = self._structural_entropy_loss(zs)
 
 		# Predictions
 		_zs = zs[:-1]

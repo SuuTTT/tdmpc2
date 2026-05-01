@@ -83,6 +83,7 @@ class OnlineTrainer(Trainer):
 			if done:
 				if eval_next:
 					eval_metrics = self.eval()
+					if self.buffer.num_eps > 0: eval_metrics.update(self.agent.diagnostics(self.buffer))
 					eval_metrics.update(self.common_metrics())
 					self.logger.log(eval_metrics, 'eval')
 					eval_next = False
@@ -120,6 +121,7 @@ class OnlineTrainer(Trainer):
 					num_updates = 1
 				for _ in range(num_updates):
 					_train_metrics = self.agent.update(self.buffer)
+								
 				train_metrics.update(_train_metrics)
 
 			self._step += 1
