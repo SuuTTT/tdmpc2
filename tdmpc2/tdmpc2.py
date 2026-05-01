@@ -18,7 +18,7 @@ class TDMPC2(torch.nn.Module):
 	def __init__(self, cfg):
 		super().__init__()
 		self.cfg = cfg
-		self.device = torch.device('cuda:0')
+		self.device = torch.device('cpu')
 		self.register_buffer("_ib_log_simnorm_dim", torch.log(torch.tensor(float(cfg.simnorm_dim), device=self.device)))
 		self.model = WorldModel(cfg).to(self.device)
 		self.optim = torch.optim.Adam([
@@ -35,7 +35,7 @@ class TDMPC2(torch.nn.Module):
 		self.scale = RunningScale(cfg)
 		self.cfg.iterations += 2*int(cfg.action_dim >= 20) # Heuristic for large action spaces
 		self.discount = torch.tensor(
-			[self._get_discount(ep_len) for ep_len in cfg.episode_lengths], device='cuda:0'
+			[self._get_discount(ep_len) for ep_len in cfg.episode_lengths], device='cpu'
 		) if self.cfg.multitask else self._get_discount(cfg.episode_length)
 		print('Episode length:', cfg.episode_length)
 		print('Discount factor:', self.discount)
@@ -93,6 +93,9 @@ class TDMPC2(torch.nn.Module):
 			state_dict = torch.load(fp, map_location=torch.get_default_device(), weights_only=False)
 		state_dict = state_dict["model"] if "model" in state_dict else state_dict
 		state_dict = api_model_conversion(self.model.state_dict(), state_dict)
+		for k, v in self.model.state_dict().items():
+			if k not in state_dict and ("__batch_size" in k or "__device" in k):
+				state_dict[k] = v
 		self.model.load_state_dict(state_dict)
 		return
 
