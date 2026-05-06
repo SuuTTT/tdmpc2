@@ -1,0 +1,211 @@
+_wandb:
+    value:
+        cli_version: 0.26.1
+        e:
+            9yx36gabroezhkwohbke0e0ptym57st2:
+                args:
+                    - task=acrobot-swingup
+                    - model_size=1
+                    - steps=100000
+                    - eval_freq=10000
+                    - se_coef=0.01
+                    - ib_coef=0.05
+                    - wandb_entity=sudingli21
+                    - wandb_project=tdmpc2-codex
+                    - exp_name=acrobot_se0.01_ib0.05_sweep_final
+                    - compile=false
+                    - save_video=false
+                codePath: tdmpc2/train.py
+                cpu_count: 8
+                cpu_count_logical: 16
+                cudaVersion: "13.0"
+                disk:
+                    /:
+                        total: "42949672960"
+                        used: "7594536960"
+                email: 1015011749@qq.com
+                executable: /usr/bin/python3
+                git:
+                    commit: 6c2e185c2fa9607509887519d4582f636bd2930f
+                    remote: https://github.com/SuuTTT/tdmpc2.git
+                gpu: NVIDIA GeForce RTX 5070
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Blackwell
+                      cudaCores: 6144
+                      memoryTotal: "12820938752"
+                      name: NVIDIA GeForce RTX 5070
+                      uuid: GPU-2538fb33-acf7-646e-6111-dd36f1dbd85b
+                host: 7fe98addb0d7
+                memory:
+                    total: "67322662912"
+                os: Linux-6.8.0-90-generic-x86_64-with-glibc2.35
+                program: /workspace/tdmpc2/tdmpc2/train.py
+                python: CPython 3.10.12
+                root: /workspace/tdmpc2/tdmpc2/logs/acrobot-swingup/1/acrobot_se0.01_ib0.05_sweep_final
+                startedAt: "2026-05-01T23:47:57.750533Z"
+                writerId: 9yx36gabroezhkwohbke0e0ptym57st2
+        m: []
+        python_version: 3.10.12
+        t:
+            "1":
+                - 1
+                - 50
+            "2":
+                - 1
+                - 50
+            "3":
+                - 2
+                - 13
+                - 15
+                - 16
+                - 61
+            "4": 3.10.12
+            "5": 0.26.1
+            "12": 0.26.1
+            "13": linux-x86_64
+action_dim:
+    value: 1
+action_dims:
+    value: ???
+batch_size:
+    value: 256
+bin_size:
+    value: 0.2
+buffer_size:
+    value: 1000000
+checkpoint:
+    value: ???
+compile:
+    value: false
+consistency_coef:
+    value: 20
+data_dir:
+    value: ???
+discount_denom:
+    value: 5
+discount_max:
+    value: 0.995
+discount_min:
+    value: 0.95
+dropout:
+    value: 0.01
+enable_wandb:
+    value: true
+enc_dim:
+    value: 256
+enc_lr_scale:
+    value: 0.3
+entropy_coef:
+    value: 0.0001
+episode_length:
+    value: 500
+episode_lengths:
+    value: ???
+episodic:
+    value: false
+eval_episodes:
+    value: 10
+eval_freq:
+    value: 10000
+exp_name:
+    value: acrobot_se0.01_ib0.05_sweep_final
+grad_clip_norm:
+    value: 20
+horizon:
+    value: 3
+ib_coef:
+    value: 0.05
+iterations:
+    value: 6
+latent_dim:
+    value: 128
+log_std_max:
+    value: 2
+log_std_min:
+    value: -10
+lr:
+    value: 0.0003
+max_std:
+    value: 2
+min_std:
+    value: 0.05
+mlp_dim:
+    value: 384
+model_size:
+    value: 1
+mpc:
+    value: true
+multitask:
+    value: false
+num_bins:
+    value: 101
+num_channels:
+    value: 32
+num_elites:
+    value: 64
+num_enc_layers:
+    value: 2
+num_pi_trajs:
+    value: 24
+num_q:
+    value: 2
+num_samples:
+    value: 512
+obs:
+    value: state
+obs_shape:
+    value:
+        state:
+            - 6
+obs_shapes:
+    value: ???
+reward_coef:
+    value: 0.1
+rho:
+    value: 0.5
+save_agent:
+    value: true
+save_csv:
+    value: true
+save_video:
+    value: false
+se_coef:
+    value: 0.01
+seed:
+    value: 1
+seed_steps:
+    value: 2500
+simnorm_dim:
+    value: 8
+steps:
+    value: 100000
+task:
+    value: acrobot-swingup
+task_dim:
+    value: 0
+task_title:
+    value: Acrobot Swingup
+tasks:
+    value:
+        - acrobot-swingup
+tau:
+    value: 0.01
+temperature:
+    value: 0.5
+termination_coef:
+    value: 1
+value_coef:
+    value: 0.1
+vmax:
+    value: 10
+vmin:
+    value: -10
+wandb_entity:
+    value: sudingli21
+wandb_project:
+    value: tdmpc2-codex
+wandb_silent:
+    value: false
+work_dir:
+    value: /workspace/tdmpc2/tdmpc2/logs/acrobot-swingup/1/acrobot_se0.01_ib0.05_sweep_final

@@ -71,7 +71,7 @@ def make_env(cfg):
                                 if env is not None:
                                         break
                         except Exception as e:
-                                # print(f"Factory {fn} failed: {e}")
+                                print(f"Factory {fn} failed: {e}")
                                 pass
                 if env is None:
                         raise ValueError(f'Failed to make environment "{cfg.task}": please verify that dependencies are installed and that the task exists.')

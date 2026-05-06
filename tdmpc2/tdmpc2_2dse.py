@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 import torch
 import torch.nn.functional as F
 
@@ -433,7 +435,7 @@ class TDMPC2(torch.nn.Module):
 		flow = source.transpose(0, 1).matmul(target) / source.shape[0]
 		flow = flow.cpu().numpy()
 
-		import matplotlib.pyplot as plt
+		
 		import wandb
 		fig, ax = plt.subplots(figsize=(4, 4))
 		im = ax.imshow(flow, cmap="magma")

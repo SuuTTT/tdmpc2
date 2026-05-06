@@ -320,3 +320,89 @@ Run a focused follow-up on the abstraction path rather than moving to high-risk 
 - Secret handling note:
   - The W&B key was used only to create `/workspace/.wandb_env` on the rented instance.
   - The key is not recorded in repository files or this research log.
+
+## 2026-05-06: Iteration 8 Vast.ai Run Finalized Locally For Teardown
+
+- Synced final remote eval artifact found at:
+  - `remote_results/vastai_rerun_acrobot_se_m1_steps400000/eval.csv`
+- Materialized permanent local result files:
+  - `results/tdmpc2-codex/acrobot-swingup_se_abstraction_vastai.csv`
+  - `results/tdmpc2-codex/acrobot-swingup_se_abstraction_vastai_compare.csv`
+  - `.autosota_scheduler_test/iter8_acrobot_se_abstraction_vastai_state.json`
+- Final 400k-step result from the synced eval CSV:
+  - candidate reward: `329.2`
+  - official TD-MPC2 mean at 400k from `results/tdmpc2/acrobot-swingup.csv`: `283.2`
+  - delta: `+46.0`
+  - decision recorded in `scores.jsonl`: `ABSTRACTION_BEATS_OFFICIAL_MEAN`
+- Remote artifacts that should still be copied off the instance before deletion if available:
+  - `logs/acrobot-swingup/1/vastai_iter8_acrobot_se_m1_steps400000/models/final.pt`
+  - `logs/acrobot-swingup/1/vastai_iter8_acrobot_se_m1_steps400000/wandb/`
+  - `/workspace/vastai-job/job.log`
+  - the full run directory `logs/acrobot-swingup/1/vastai_iter8_acrobot_se_m1_steps400000/`
+- Important note:
+  - The local workspace now has the final eval curve and comparison CSVs, but not the remote checkpoint itself.
+  - Instance deletion is safe only after the remote checkpoint and any desired W&B/log files are copied out.
+
+## 2026-05-06: Hopper Final Runs Reviewed
+
+- Final Hopper experiments identified under:
+  - `tdmpc2/logs/hopper-hop/1/hopper_1dse_4m_final/`
+  - `tdmpc2/logs/hopper-hop/1/hopper_2dse_4m_final/`
+- Shared setup for both runs:
+  - task: `hopper-hop`
+  - model size: `1`
+  - steps: `4000000`
+  - seed: `1`
+  - eval frequency: `50000`
+  - eval episodes: `10`
+  - `ib_coef=0.1`
+  - `se_coef=0.1`
+  - `compile=false`
+- Structural difference:
+  - `hopper_1dse_4m_final`: 1D SE only.
+  - `hopper_2dse_4m_final`: 2D SE enabled with `se_2d=true` and `num_super_modules=2`.
+
+### Final Metrics
+
+- `hopper_1dse_4m_final`
+  - eval CSV: `tdmpc2/logs/hopper-hop/1/hopper_1dse_4m_final/eval.csv`
+  - checkpoint: `tdmpc2/logs/hopper-hop/1/hopper_1dse_4m_final/models/final.pt`
+  - final reward at `4000000`: `335.4`
+  - best observed reward: `357.5` at step `3750000`
+  - mean reward over last 10 evals: `348.1`
+  - mean reward over last 20 evals: `345.1`
+  - first reached reward `>=300`: step `350000`
+  - first reached reward `>=340`: step `750000`
+  - first reached reward `>=350`: step `1350000`
+
+- `hopper_2dse_4m_final`
+  - eval CSV: `tdmpc2/logs/hopper-hop/1/hopper_2dse_4m_final/eval.csv`
+  - checkpoint: `tdmpc2/logs/hopper-hop/1/hopper_2dse_4m_final/models/final.pt`
+  - final reward at `4000000`: `340.1`
+  - best observed reward: `352.3` at step `3600000`
+  - mean reward over last 10 evals: `342.8`
+  - mean reward over last 20 evals: `343.1`
+  - first reached reward `>=300`: step `450000`
+  - first reached reward `>=340`: step `1850000`
+  - first reached reward `>=350`: step `3100000`
+
+### Interpretation
+
+- The 1D SE Hopper run is the stronger result overall.
+- Although the 2D SE run has a slightly higher final-point reward (`340.1` vs `335.4`), the 1D SE run:
+  - learns materially faster in the first half of training,
+  - reaches the `340+` reward regime much earlier,
+  - reaches a higher peak reward,
+  - and has a better trailing-window mean over both the last 10 and last 20 evaluations.
+- The current evidence does not support 2D SE as an improvement over the simpler 1D SE configuration on `hopper-hop` under this single-seed 4M-step setting.
+- Best current claim:
+  - `hopper_1dse_4m_final` should be treated as the primary Hopper result.
+  - `hopper_2dse_4m_final` is better treated as a negative-or-neutral ablation showing that the added 2D hierarchy did not outperform the simpler SE regularizer here.
+
+### Artifact Retention
+
+- Keep at minimum:
+  - both `eval.csv` files,
+  - both `models/final.pt` checkpoints,
+  - each run's `wandb/` directory,
+  - and the exact launch script context from `tdmpc2/run_master.sh`.
