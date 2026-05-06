@@ -1,0 +1,159 @@
+starting_train 2026-04-27T21:00:20Z
+Work dir: /workspace/tdmpc2-codex/logs/dog-run/1/iter3_original_m5_steps50000
+Episode length: 500
+Discount factor: 0.99
+-----------------------------------------------------
+  Task:           Dog Run
+  Steps:          50,000
+  Observations:   (223,)
+  Actions:        38
+  Experiment:     iter3_original_m5_steps50000
+-----------------------------------------------------
+Wandb disabled.
+Architecture: TD-MPC2 World Model
+Encoder: ModuleDict(
+  (state): Sequential(
+    (0): NormedLinear(in_features=223, out_features=256, bias=True, act=Mish)
+    (1): NormedLinear(in_features=256, out_features=512, bias=True, act=SimNorm)
+  )
+)
+Dynamics: Sequential(
+  (0): NormedLinear(in_features=550, out_features=512, bias=True, act=Mish)
+  (1): NormedLinear(in_features=512, out_features=512, bias=True, act=Mish)
+  (2): NormedLinear(in_features=512, out_features=512, bias=True, act=SimNorm)
+)
+Reward: Sequential(
+  (0): NormedLinear(in_features=550, out_features=512, bias=True, act=Mish)
+  (1): NormedLinear(in_features=512, out_features=512, bias=True, act=Mish)
+  (2): Linear(in_features=512, out_features=101, bias=True)
+)
+Policy prior: Sequential(
+  (0): NormedLinear(in_features=512, out_features=512, bias=True, act=Mish)
+  (1): NormedLinear(in_features=512, out_features=512, bias=True, act=Mish)
+  (2): Linear(in_features=512, out_features=76, bias=True)
+)
+Q-functions: Vectorized 5x Sequential(
+  (0): NormedLinear(in_features=550, out_features=512, bias=True, dropout=0.01, act=Mish)
+  (1): NormedLinear(in_features=512, out_features=512, bias=True, act=Mish)
+  (2): Linear(in_features=512, out_features=101, bias=True)
+)
+Learnable parameters: 5,159,082
+ eval             E: 0                     I: 0                     R: 7.4                   S: 0.0                   T: 0:04:39            
+ train            E: 0                     I: 500                   R: 5.6                   S: 0.0                   T: 0:04:41            
+Buffer capacity: 50,000
+Storage required: 0.05 GB
+Using CUDA:0 memory for storage.
+ train            E: 1                     I: 1,000                 R: 5.6                   S: 0.0                   T: 0:04:42            
+ train            E: 2                     I: 1,500                 R: 8.4                   S: 0.0                   T: 0:04:44            
+ train            E: 3                     I: 2,000                 R: 8.2                   S: 0.0                   T: 0:04:46            
+ train            E: 4                     I: 2,500                 R: 7.6                   S: 0.0                   T: 0:04:48            
+Pretraining agent on seed data...
+ train            E: 5                     I: 3,000                 R: 11.9                  S: 0.0                   T: 0:08:00            
+ train            E: 6                     I: 3,500                 R: 3.2                   S: 0.0                   T: 0:08:53            
+ train            E: 7                     I: 4,000                 R: 5.7                   S: 0.0                   T: 0:09:46            
+ train            E: 8                     I: 4,500                 R: 4.3                   S: 0.0                   T: 0:10:39            
+ train            E: 9                     I: 5,000                 R: 7.0                   S: 0.0                   T: 0:11:32            
+ train            E: 10                    I: 5,500                 R: 5.4                   S: 0.0                   T: 0:12:24            
+ train            E: 11                    I: 6,000                 R: 3.5                   S: 0.0                   T: 0:13:16            
+ train            E: 12                    I: 6,500                 R: 25.0                  S: 0.0                   T: 0:14:09            
+ train            E: 13                    I: 7,000                 R: 7.4                   S: 0.0                   T: 0:15:02            
+ train            E: 14                    I: 7,500                 R: 3.4                   S: 0.0                   T: 0:15:55            
+ train            E: 15                    I: 8,000                 R: 13.0                  S: 0.0                   T: 0:16:48            
+ train            E: 16                    I: 8,500                 R: 5.0                   S: 0.0                   T: 0:17:41            
+ train            E: 17                    I: 9,000                 R: 5.6                   S: 0.0                   T: 0:18:34            
+ train            E: 18                    I: 9,500                 R: 4.7                   S: 0.0                   T: 0:19:27            
+ train            E: 19                    I: 10,000                R: 3.7                   S: 0.0                   T: 0:20:20            
+ train            E: 20                    I: 10,500                R: 3.9                   S: 0.0                   T: 0:21:12            
+ train            E: 21                    I: 11,000                R: 4.5                   S: 0.0                   T: 0:22:05            
+ train            E: 22                    I: 11,500                R: 8.8                   S: 0.0                   T: 0:22:58            
+ train            E: 23                    I: 12,000                R: 6.0                   S: 0.0                   T: 0:23:51            
+ train            E: 24                    I: 12,500                R: 9.3                   S: 0.0                   T: 0:24:44            
+ train            E: 25                    I: 13,000                R: 5.7                   S: 0.0                   T: 0:25:38            
+ train            E: 26                    I: 13,500                R: 4.4                   S: 0.0                   T: 0:26:31            
+ train            E: 27                    I: 14,000                R: 4.1                   S: 0.0                   T: 0:27:24            
+ train            E: 28                    I: 14,500                R: 5.6                   S: 0.0                   T: 0:28:18            
+ train            E: 29                    I: 15,000                R: 6.5                   S: 0.0                   T: 0:29:11            
+ train            E: 30                    I: 15,500                R: 7.8                   S: 0.0                   T: 0:30:04            
+ train            E: 31                    I: 16,000                R: 5.9                   S: 0.0                   T: 0:30:58            
+ train            E: 32                    I: 16,500                R: 9.9                   S: 0.0                   T: 0:31:51            
+ train            E: 33                    I: 17,000                R: 9.1                   S: 0.0                   T: 0:32:44            
+ train            E: 34                    I: 17,500                R: 8.5                   S: 0.0                   T: 0:33:37            
+ train            E: 35                    I: 18,000                R: 7.2                   S: 0.0                   T: 0:34:30            
+ train            E: 36                    I: 18,500                R: 9.1                   S: 0.0                   T: 0:35:22            
+ train            E: 37                    I: 19,000                R: 11.4                  S: 0.0                   T: 0:36:15            
+ train            E: 38                    I: 19,500                R: 8.8                   S: 0.0                   T: 0:37:08            
+ train            E: 39                    I: 20,000                R: 14.8                  S: 0.0                   T: 0:38:00            
+ train            E: 40                    I: 20,500                R: 4.7                   S: 0.0                   T: 0:38:53            
+ train            E: 41                    I: 21,000                R: 16.3                  S: 0.0                   T: 0:39:46            
+ train            E: 42                    I: 21,500                R: 10.5                  S: 0.0                   T: 0:40:39            
+ train            E: 43                    I: 22,000                R: 3.4                   S: 0.0                   T: 0:41:33            
+ train            E: 44                    I: 22,500                R: 9.3                   S: 0.0                   T: 0:42:26            
+ train            E: 45                    I: 23,000                R: 6.8                   S: 0.0                   T: 0:43:19            
+ train            E: 46                    I: 23,500                R: 4.4                   S: 0.0                   T: 0:44:12            
+ train            E: 47                    I: 24,000                R: 8.8                   S: 0.0                   T: 0:45:06            
+ train            E: 48                    I: 24,500                R: 3.5                   S: 0.0                   T: 0:45:59            
+ train            E: 49                    I: 25,000                R: 6.1                   S: 0.0                   T: 0:46:53            
+ train            E: 50                    I: 25,500                R: 3.6                   S: 0.0                   T: 0:47:46            
+ train            E: 51                    I: 26,000                R: 4.9                   S: 0.0                   T: 0:48:40            
+ train            E: 52                    I: 26,500                R: 5.5                   S: 0.0                   T: 0:49:34            
+ train            E: 53                    I: 27,000                R: 3.8                   S: 0.0                   T: 0:50:28            
+ train            E: 54                    I: 27,500                R: 3.7                   S: 0.0                   T: 0:51:20            
+ train            E: 55                    I: 28,000                R: 10.0                  S: 0.0                   T: 0:52:07            
+ train            E: 56                    I: 28,500                R: 6.7                   S: 0.0                   T: 0:52:55            
+ train            E: 57                    I: 29,000                R: 4.8                   S: 0.0                   T: 0:53:42            
+ train            E: 58                    I: 29,500                R: 6.4                   S: 0.0                   T: 0:54:35            
+ train            E: 59                    I: 30,000                R: 14.2                  S: 0.0                   T: 0:55:29            
+ train            E: 60                    I: 30,500                R: 16.0                  S: 0.0                   T: 0:56:16            
+ train            E: 61                    I: 31,000                R: 10.1                  S: 0.0                   T: 0:57:04            
+ train            E: 62                    I: 31,500                R: 16.7                  S: 0.0                   T: 0:57:57            
+ train            E: 63                    I: 32,000                R: 15.3                  S: 0.0                   T: 0:58:50            
+ train            E: 64                    I: 32,500                R: 11.5                  S: 0.0                   T: 0:59:45            
+ train            E: 65                    I: 33,000                R: 13.4                  S: 0.0                   T: 1:00:38            
+ train            E: 66                    I: 33,500                R: 14.0                  S: 0.0                   T: 1:01:32            
+ train            E: 67                    I: 34,000                R: 3.3                   S: 0.0                   T: 1:02:26            
+ train            E: 68                    I: 34,500                R: 13.8                  S: 0.0                   T: 1:03:20            
+ train            E: 69                    I: 35,000                R: 7.1                   S: 0.0                   T: 1:04:13            
+ train            E: 70                    I: 35,500                R: 2.9                   S: 0.0                   T: 1:05:06            
+ train            E: 71                    I: 36,000                R: 6.5                   S: 0.0                   T: 1:05:59            
+ train            E: 72                    I: 36,500                R: 5.6                   S: 0.0                   T: 1:06:52            
+ train            E: 73                    I: 37,000                R: 8.1                   S: 0.0                   T: 1:07:45            
+ train            E: 74                    I: 37,500                R: 18.6                  S: 0.0                   T: 1:08:38            
+ train            E: 75                    I: 38,000                R: 12.2                  S: 0.0                   T: 1:09:31            
+ train            E: 76                    I: 38,500                R: 15.6                  S: 0.0                   T: 1:10:24            
+ train            E: 77                    I: 39,000                R: 9.7                   S: 0.0                   T: 1:11:17            
+ train            E: 78                    I: 39,500                R: 10.3                  S: 0.0                   T: 1:12:10            
+ train            E: 79                    I: 40,000                R: 15.5                  S: 0.0                   T: 1:13:03            
+ train            E: 80                    I: 40,500                R: 10.1                  S: 0.0                   T: 1:13:56            
+ train            E: 81                    I: 41,000                R: 7.2                   S: 0.0                   T: 1:14:48            
+ train            E: 82                    I: 41,500                R: 18.4                  S: 0.0                   T: 1:15:40            
+ train            E: 83                    I: 42,000                R: 20.5                  S: 0.0                   T: 1:16:34            
+ train            E: 84                    I: 42,500                R: 44.8                  S: 0.0                   T: 1:17:27            
+ train            E: 85                    I: 43,000                R: 35.2                  S: 0.0                   T: 1:18:20            
+ train            E: 86                    I: 43,500                R: 28.6                  S: 0.0                   T: 1:19:15            
+ train            E: 87                    I: 44,000                R: 12.0                  S: 0.0                   T: 1:20:09            
+ train            E: 88                    I: 44,500                R: 11.3                  S: 0.0                   T: 1:21:02            
+ train            E: 89                    I: 45,000                R: 10.9                  S: 0.0                   T: 1:21:56            
+ train            E: 90                    I: 45,500                R: 32.3                  S: 0.0                   T: 1:22:49            
+ train            E: 91                    I: 46,000                R: 29.9                  S: 0.0                   T: 1:23:42            
+ train            E: 92                    I: 46,500                R: 18.8                  S: 0.0                   T: 1:24:35            
+ train            E: 93                    I: 47,000                R: 41.1                  S: 0.0                   T: 1:25:28            
+ train            E: 94                    I: 47,500                R: 41.8                  S: 0.0                   T: 1:26:21            
+ train            E: 95                    I: 48,000                R: 41.2                  S: 0.0                   T: 1:27:14            
+ train            E: 96                    I: 48,500                R: 32.8                  S: 0.0                   T: 1:28:07            
+ train            E: 97                    I: 49,000                R: 40.9                  S: 0.0                   T: 1:29:00            
+ train            E: 98                    I: 49,500                R: 41.4                  S: 0.0                   T: 1:29:53            
+ eval             E: 99                    I: 50,000                R: 35.4                  S: 0.0                   T: 1:35:24            
+ train            E: 99                    I: 50,000                R: 51.2                  S: 0.0                   T: 1:35:24            
+
+Training completed successfully
+train_exit=0 2026-04-27T22:35:51Z
+starting_eval 2026-04-27T22:35:51Z
+Task: dog-run
+Model size: 5
+Checkpoint: /workspace/tdmpc2-codex/logs/dog-run/1/iter3_original_m5_steps50000/models/final.pt
+Episode length: 500
+Discount factor: 0.99
+Evaluating agent on dog-run:
+  dog-run               	R: 27.5  	S: 0.00
+eval_exit=0 2026-04-27T22:36:25Z
+./scripts/autosota_iter3_original_m5_steps50000.sh: line 73: python: command not found

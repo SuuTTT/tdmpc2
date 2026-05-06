@@ -1,0 +1,29 @@
+{
+  "create_response": {
+    "instance_api_key": "[redacted]",
+    "new_contract": 35894623,
+    "success": true
+  },
+  "created_at": "2026-04-30T11:01:01Z",
+  "offer": {
+    "bid_price_usd": null,
+    "cpu_cores_effective": 5.333333333333333,
+    "cpu_ram_gb": 20.94,
+    "disk_bw_mb_s": 4978.0,
+    "disk_space_gb": 317.0717086732865,
+    "duration_days": 10724382.360246181,
+    "estimated_total_usd": 0.869861,
+    "geolocation": "Denmark, DK",
+    "gpu": "1x RTX 5060 Ti",
+    "gpu_ram_gb": 15.93,
+    "hourly_usd": 0.102222,
+    "inet_down_cost_usd_per_gb": 0.006510416666666667,
+    "inet_down_mbps": 3561.5,
+    "inet_up_cost_usd_per_gb": 0.006510416666666667,
+    "inet_up_mbps": 2709.7,
+    "offer_id": 35478653,
+    "reliability": 0.9877083,
+    "storage_cost_usd_per_gb_month": 0.19999999999999998,
+    "verified": "verified"
+  }
+}

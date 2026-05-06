@@ -1,0 +1,11 @@
+timestamp=2026-04-28T05:44:07Z
+pre_commit=689304ee14d0a97c4c6c1eb3c6a6e52cb2cc7f05
+idea_id=IDEA-007
+task=dog-run
+model_size=1
+steps=50000
+num_samples=256
+num_elites=32
+num_pi_trajs=12
+iterations=4
+checkpoint=/workspace/tdmpc2-codex/logs/dog-run/1/iter5_fastplanner_m1_steps50000/models/final.pt

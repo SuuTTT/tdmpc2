@@ -1,0 +1,16 @@
+timestamp=2026-04-28T19:03:48Z
+pre_commit=0ca4d50afc7ebba659b3d75177657b376579c536
+idea_id=IDEA-009
+task=acrobot-swingup
+model_size=1
+steps=400000
+seed=1
+eval_freq=100000
+eval_episodes=10
+se_coef=0.01
+compile=false
+wait_pid=626356
+official_csv=/workspace/tdmpc2-codex/results/tdmpc2/acrobot-swingup.csv
+result_csv=/workspace/tdmpc2-codex/results/tdmpc2-codex/acrobot-swingup_se_abstraction.csv
+compare_csv=/workspace/tdmpc2-codex/results/tdmpc2-codex/acrobot-swingup_se_abstraction_compare.csv
+checkpoint=/workspace/tdmpc2-codex/logs/acrobot-swingup/1/iter8_acrobot_se_m1_steps400000/models/final.pt

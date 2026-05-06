@@ -1,0 +1,305 @@
+diff --git a/idea_library.md b/idea_library.md
+index 909a4c4..56123bb 100644
+--- a/idea_library.md
++++ b/idea_library.md
+@@ -99,5 +99,35 @@
+ - **Hypothesis**: For early 50k-step search, `model_size=1 num_samples=256 num_elites=32 num_pi_trajs=12 iterations=4` may keep enough planning quality while materially reducing wall-clock runtime versus the default `model_size=1` abstraction run.
+ - **Protocol Audit**: Evaluation task, reward, metric, and evaluation script are unchanged. This is a planner-cost optimization, not a change to benchmark semantics.
+ - **Implementation Sketch**: Train `task=dog-run model_size=1 steps=50000 seed=1 exp_name=iter5_fastplanner_m1_steps50000 num_samples=256 num_elites=32 num_pi_trajs=12 iterations=4 enable_wandb=false save_video=false compile=false`, then evaluate with `eval_episodes=10`.
+-- **Status**: IN-PROGRESS
+-- **Result**: Background run launched; result pending.
++- **Status**: SUCCESS
++- **Result**: Completed with reward 47.8 over 10 evaluation episodes and train time 1:18:17. This is slightly below the validated default `model_size=1` abstraction score of 50.5, but competitive and faster than the rough 1.5-hour default runtime estimate.
++
++### IDEA-008: Information Bottleneck Latent Abstraction
++- **Origin**: Human follow-up
++- **Granularity**: ALGO
++- **Risk**: MEDIUM
++- **Admissibility**: CLEARED
++- **Priority**: HIGH
++- **Metric Target**: episode_reward
++- **Lever**: Add `ib_coef` to the TD-MPC2 world-model update. The loss penalizes KL from each SimNorm latent group to a uniform categorical prior.
++- **Evidence**: Information bottleneck methods encourage representations that preserve task-relevant predictive information while discarding nuisance detail. TD-MPC2 already uses grouped SimNorm latent probabilities, which gives a low-friction place to apply a KL-to-prior abstraction penalty.
++- **Hypothesis**: A small information-bottleneck coefficient may improve cross-task abstraction by regularizing the latent model beyond the simple `model_size=1` bottleneck.
++- **Protocol Audit**: Evaluation task, reward, and environment remain unchanged. This modifies the learned representation objective, so results should be compared against a same-task, same-step `model_size=1` run.
++- **Implementation Sketch**: Train `task=acrobot-swingup model_size=1 steps=400000 seed=1 eval_freq=100000 eval_episodes=10 ib_coef=0.01 compile=false exp_name=iter7_acrobot_ib_m1_steps400000`.
++- **Status**: READY
++- **Result**: Code and run script prepared. The run script waits for the active iteration 6 acrobot compile job before starting to avoid GPU contention.
++
++### IDEA-009: Structural Entropy Latent Transition Abstraction
++- **Origin**: Human follow-up via `structural-entropy-proposal` skill
++- **Granularity**: ALGO
++- **Risk**: MEDIUM
++- **Admissibility**: CLEARED
++- **Priority**: HIGH
++- **Metric Target**: episode_reward
++- **Lever**: Add `se_coef` to the TD-MPC2 world-model update. The loss builds a soft transition-flow graph over rollout latents and minimizes a one-level structural entropy proxy.
++- **Evidence**: Structural Entropy models uncertainty in graph/network structure through encoding trees. TD-MPC2 already learns latent transition dynamics, giving a natural graph: latent states as vertices and predicted transitions as edges.
++- **Hypothesis**: Encouraging low structural entropy in the latent transition flow can create more coherent macro-state modules, improving planning and early sample efficiency beyond capacity-only abstraction.
++- **Protocol Audit**: Evaluation task, reward, and environment remain unchanged. This changes representation training, so it must be compared against same-task, same-step `model_size=1` probes.
++- **Implementation Sketch**: Train `task=acrobot-swingup model_size=1 steps=400000 seed=1 eval_freq=100000 eval_episodes=10 se_coef=0.01 compile=false exp_name=iter8_acrobot_se_m1_steps400000`.
++- **Status**: READY
++- **Result**: Code, proposal, and run script prepared. The run script waits for iteration 7 to complete before starting to avoid GPU contention.
+diff --git a/research_log.md b/research_log.md
+index e6e7468..2fc8f7a 100644
+--- a/research_log.md
++++ b/research_log.md
+@@ -125,3 +125,155 @@ Interpretation:
+ - Success criterion:
+   - materially lower wall-clock runtime than the default `model_size=1` 50k run.
+   - reward remains competitive with the validated abstraction score of `50.5`.
++
++## 2026-04-28: Iteration 5 Fast Planner Result
++
++- Completed the planner-cost reduction probe:
++  - idea: `IDEA-007`
++  - task: `dog-run`
++  - model size: `1`
++  - train steps: `50000`
++  - seed: `1`
++  - eval episodes: `10`
++  - planner settings:
++    - `num_samples=256`
++    - `num_elites=32`
++    - `num_pi_trajs=12`
++    - `iterations=4`
++- Result:
++  - reward: `47.8`
++  - success: `0.0`
++  - train time: `1:18:17`
++  - decision: `FASTPLANNER_COMPETITIVE`
++- Interpretation:
++  - The fast planner is slightly below the validated default abstraction score (`47.8` vs `50.5`).
++  - The result is still competitive under the 50k-step, 10-episode tier.
++  - Runtime improved relative to the earlier rough default `model_size=1` 50k runtime estimate of about 1.5 hours.
++- Evidence recorded in:
++  - `scores.jsonl`
++  - `.autosota_scheduler_test/iter5_fastplanner_state.json`
++  - `logs/autosota/iter5_fastplanner_m1_steps50000.log`
++  - `logs/autosota/iter5_fastplanner_m1_steps50000_eval10.log`
++
++## Current State
++
++- Git worktree is clean.
++- Best reward under the validated 50k-step, 10-episode tier remains:
++  - `model_size=1`, default planner: reward `50.5`.
++- Best speed/performance tradeoff currently observed:
++  - `model_size=1`, reduced planner: reward `47.8`, train time `1:18:17`.
++- Main finding so far:
++  - The human abstraction prior is supported in this smoke-tier setup: the `model_size=1` latent bottleneck outperformed the compute-matched `model_size=5` comparator on `dog-run`.
++- Important limitation:
++  - These are still smoke-tier runs on one seed and short training budgets, not paper-level reproduction.
++
++## Recommended Next Action
++
++Run a focused follow-up on the abstraction path rather than moving to high-risk code changes:
++
++- Option A: repeat the validated winner with another seed:
++  - `model_size=1`
++  - default planner
++  - `steps=50000`
++  - `eval_episodes=10`
++  - new seed, for example `seed=2`
++- Option B: tune between default and fast planner:
++  - keep `model_size=1`
++  - test a milder planner reduction than iteration 5, such as `num_samples=384`, `num_elites=48`, `num_pi_trajs=16`, `iterations=4`
++  - goal: recover reward closer to `50.5` while preserving most of the runtime gain.
++- Defer `IDEA-005` and `IDEA-006` until the low-risk parameter evidence is stronger across seeds.
++
++## 2026-04-28: Iteration 6 Acrobot Compile Run Launched
++
++- Launched a cross-task abstraction probe on:
++  - task: `acrobot-swingup`
++  - idea: `IDEA-004`
++  - model size: `1`
++  - train steps: `4000000`
++  - seed: `1`
++  - eval frequency: `100000`
++  - eval episodes: `10`
++  - `compile=true`
++- Comparison target:
++  - official local CSV: `results/tdmpc2/acrobot-swingup.csv`
++  - official schema: `step,reward,seed`
++  - official seeds: `1`, `2`, `3`
++  - official final step: `4000000`
++- Output paths:
++  - run script: `scripts/autosota_iter6_acrobot_compile_abstraction.sh`
++  - exporter: `scripts/export_acrobot_compile_result.py`
++  - train log: `logs/autosota/iter6_acrobot_compile_abstraction_m1_steps4000000.log`
++  - official-format candidate CSV: `results/tdmpc2-codex/acrobot-swingup_abstraction_compile.csv`
++  - comparison CSV: `results/tdmpc2-codex/acrobot-swingup_abstraction_compile_compare.csv`
++- Early compile status:
++  - a 1-step compile smoke test completed successfully.
++  - the smoke test took about `1:20`, indicating high first-compile overhead.
++  - the full run started and wrote the initial step-0 evaluation: reward `8.6`.
++  - PyTorch emitted recompilation warnings during startup/pretraining, so the acceleration claim should wait for post-warmup throughput.
++- In-progress milestone:
++  - step `100000`: candidate reward `112.0`; official TD-MPC2 mean at same step `179.1`.
++  - step `200000`: candidate reward `285.7`; official TD-MPC2 mean at same step `296.3`.
++  - step `300000`: candidate reward `447.8`; official TD-MPC2 mean at same step `346.9`.
++  - step `400000`: candidate reward `497.6`; official TD-MPC2 mean at same step `322.0`.
++  - elapsed time at step `400000`: `2:06:09`.
++- Current interpretation:
++  - This run is designed to test whether the dog-run abstraction result transfers to a different DMControl task while also testing PyTorch compile.
++  - It is not a like-for-like model-size comparison with official TD-MPC2, because the official single-task result is model-size 5 and the abstraction candidate intentionally uses model-size 1.
++
++## 2026-04-28: Iteration 7 Information Bottleneck Probe Prepared
++
++- Added `IDEA-008`, an information-theoretic abstraction method.
++- Mechanism:
++  - TD-MPC2 already represents state with grouped SimNorm latent probabilities.
++  - The new optional loss computes KL from each SimNorm group to a uniform prior.
++  - This is an information-bottleneck proxy: it discourages the latent from carrying extra observation-specific information unless the main TD-MPC2 losses need it.
++- Code changes:
++  - `tdmpc2/config.yaml`: added `ib_coef`, default `0.0`.
++  - `tdmpc2/tdmpc2.py`: added `_latent_ib_loss` and logs `ib_loss`.
++  - Default behavior is unchanged when `ib_coef=0.0`.
++- Prepared run:
++  - script: `scripts/autosota_iter7_acrobot_ib_abstraction.sh`
++  - task: `acrobot-swingup`
++  - model size: `1`
++  - steps: `400000`
++  - seed: `1`
++  - eval frequency: `100000`
++  - eval episodes: `10`
++  - `ib_coef=0.01`
++  - `compile=false`
++- The run script waits for the active iteration 6 compile run before starting, to avoid GPU contention.
++- Planned outputs:
++  - official-format CSV: `results/tdmpc2-codex/acrobot-swingup_ib_abstraction.csv`
++  - comparison CSV: `results/tdmpc2-codex/acrobot-swingup_ib_abstraction_compare.csv`
++
++## 2026-04-28: Iteration 8 Structural Entropy Probe Prepared
++
++- Used the requested skill:
++  - `/workspace/autosota-lite/.codex/skills/structural-entropy-proposal/SKILL.md`
++- Added `IDEA-009`, a Structural Entropy latent-transition abstraction.
++- SE mapping:
++  - `V`: rollout latent states from TD-MPC2 training batches.
++  - `E`: consecutive predicted latent transitions in the model rollout.
++  - `W`: soft transition flow between SimNorm latent symbols.
++  - `2m`: total in-volume plus out-volume of the soft transition graph.
++  - `T`: one-level soft encoding tree with root plus `simnorm_dim` symbolic modules.
++  - `V_alpha`: soft module volume.
++  - `g_alpha`: module cut volume, approximated as volume minus within-module transition flow.
++- Code changes:
++  - `tdmpc2/config.yaml`: added `se_coef`, default `0.0`.
++  - `tdmpc2/tdmpc2.py`: added `_structural_entropy_loss` and logs `se_loss`.
++  - `structural_entropy_proposal.md`: records the proposal, math, implementation plan, risks, and citations.
++- Prepared run:
++  - script: `scripts/autosota_iter8_acrobot_se_abstraction.sh`
++  - task: `acrobot-swingup`
++  - model size: `1`
++  - steps: `400000`
++  - seed: `1`
++  - eval frequency: `100000`
++  - eval episodes: `10`
++  - `se_coef=0.01`
++  - `compile=false`
++- The run script waits for iteration 7 to complete before starting, to avoid GPU contention.
++- Planned outputs:
++  - official-format CSV: `results/tdmpc2-codex/acrobot-swingup_se_abstraction.csv`
++  - comparison CSV: `results/tdmpc2-codex/acrobot-swingup_se_abstraction_compare.csv`
+diff --git a/tdmpc2/config.yaml b/tdmpc2/config.yaml
+index ff15dbb..dc1e419 100755
+--- a/tdmpc2/config.yaml
++++ b/tdmpc2/config.yaml
+@@ -19,6 +19,8 @@ value_coef: 0.1
+ termination_coef: 1
+ consistency_coef: 20
+ rho: 0.5
++ib_coef: 0.0
++se_coef: 0.0
+ lr: 3e-4
+ enc_lr_scale: 0.3
+ grad_clip_norm: 20
+diff --git a/tdmpc2/tdmpc2.py b/tdmpc2/tdmpc2.py
+index 7111329..87f5d9c 100755
+--- a/tdmpc2/tdmpc2.py
++++ b/tdmpc2/tdmpc2.py
+@@ -19,6 +19,7 @@ class TDMPC2(torch.nn.Module):
+ 		super().__init__()
+ 		self.cfg = cfg
+ 		self.device = torch.device('cuda:0')
++		self.register_buffer("_ib_log_simnorm_dim", torch.log(torch.tensor(float(cfg.simnorm_dim), device=self.device)))
+ 		self.model = WorldModel(cfg).to(self.device)
+ 		self.optim = torch.optim.Adam([
+ 			{'params': self.model._encoder.parameters(), 'lr': self.cfg.lr*self.cfg.enc_lr_scale},
+@@ -257,6 +258,34 @@ class TDMPC2(torch.nn.Module):
+ 		discount = self.discount[task].unsqueeze(-1) if self.cfg.multitask else self.discount
+ 		return reward + discount * (1-terminated) * self.model.Q(next_z, action, task, return_type='min', target=True)
+ 
++	def _latent_ib_loss(self, z):
++		"""
++		Information-bottleneck proxy for SimNorm latents.
++		Minimizes KL(q(z|x) || uniform) within each simplex group, reducing
++		observation-specific information carried by the latent representation.
++		"""
++		z = z.clamp_min(1e-8)
++		z = z.view(*z.shape[:-1], -1, self.cfg.simnorm_dim)
++		kl_to_uniform = (z * (z.log() + self._ib_log_simnorm_dim)).sum(-1)
++		return kl_to_uniform.mean()
++
++	def _structural_entropy_loss(self, zs):
++		"""
++		One-level soft structural entropy over latent transition flow.
++		Vertices are rollout latent states, edges are consecutive latent
++		transitions, and modules are SimNorm symbols aggregated across groups.
++		"""
++		assignments = zs.view(*zs.shape[:-1], -1, self.cfg.simnorm_dim).mean(-2)
++		source = assignments[:-1].reshape(-1, self.cfg.simnorm_dim)
++		target = assignments[1:].reshape(-1, self.cfg.simnorm_dim)
++		flow = source.transpose(0, 1).matmul(target) / source.shape[0]
++		volume = flow.sum(0) + flow.sum(1)
++		internal = flow.diag()
++		cut = (volume - 2 * internal).clamp_min(0)
++		total_volume = volume.sum().clamp_min(1e-8)
++		ratio = (volume / total_volume).clamp_min(1e-8)
++		return -(cut / total_volume * ratio.log()).sum()
++
+ 	def _update(self, obs, action, reward, terminated, task=None):
+ 		# Compute targets
+ 		with torch.no_grad():
+@@ -270,11 +299,14 @@ class TDMPC2(torch.nn.Module):
+ 		zs = torch.empty(self.cfg.horizon+1, self.cfg.batch_size, self.cfg.latent_dim, device=self.device)
+ 		z = self.model.encode(obs[0], task)
+ 		zs[0] = z
++		ib_loss = self._latent_ib_loss(z)
+ 		consistency_loss = 0
+ 		for t, (_action, _next_z) in enumerate(zip(action.unbind(0), next_z.unbind(0))):
+ 			z = self.model.next(z, _action, task)
+ 			consistency_loss = consistency_loss + F.mse_loss(z, _next_z) * self.cfg.rho**t
++			ib_loss = ib_loss + self._latent_ib_loss(_next_z) * self.cfg.rho**t
+ 			zs[t+1] = z
++		se_loss = self._structural_entropy_loss(zs)
+ 
+ 		# Predictions
+ 		_zs = zs[:-1]
+@@ -291,6 +323,7 @@ class TDMPC2(torch.nn.Module):
+ 				value_loss = value_loss + math.soft_ce(qs_unbind_unbind, td_targets_unbind, self.cfg).mean() * self.cfg.rho**t
+ 
+ 		consistency_loss = consistency_loss / self.cfg.horizon
++		ib_loss = ib_loss / (self.cfg.horizon + 1)
+ 		reward_loss = reward_loss / self.cfg.horizon
+ 		if self.cfg.episodic:
+ 			termination_loss = F.binary_cross_entropy_with_logits(termination_pred, terminated)
+@@ -301,7 +334,9 @@ class TDMPC2(torch.nn.Module):
+ 			self.cfg.consistency_coef * consistency_loss +
+ 			self.cfg.reward_coef * reward_loss +
+ 			self.cfg.termination_coef * termination_loss +
+-			self.cfg.value_coef * value_loss
++			self.cfg.value_coef * value_loss +
++			self.cfg.ib_coef * ib_loss +
++			self.cfg.se_coef * se_loss
+ 		)
+ 
+ 		# Update model
+@@ -323,6 +358,8 @@ class TDMPC2(torch.nn.Module):
+ 			"reward_loss": reward_loss,
+ 			"value_loss": value_loss,
+ 			"termination_loss": termination_loss,
++			"ib_loss": ib_loss,
++			"se_loss": se_loss,
+ 			"total_loss": total_loss,
+ 			"grad_norm": grad_norm,
+ 		})

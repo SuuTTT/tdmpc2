@@ -1,0 +1,21 @@
+starting_abstraction_eval 2026-04-28T04:56:14Z
+Task: dog-run
+Model size: 1
+Checkpoint: /workspace/tdmpc2-codex/logs/dog-run/1/iter2_abstraction_m1_steps50000/models/final.pt
+Episode length: 500
+Discount factor: 0.99
+Evaluating agent on dog-run:
+  dog-run               	R: 50.5  	S: 0.00
+abstraction_eval_exit=0 2026-04-28T05:00:51Z
+starting_original_eval 2026-04-28T05:00:51Z
+Task: dog-run
+Model size: 5
+Checkpoint: /workspace/tdmpc2-codex/logs/dog-run/1/iter3_original_m5_steps50000/models/final.pt
+Episode length: 500
+Discount factor: 0.99
+Evaluating agent on dog-run:
+  dog-run               	R: 29.3  	S: 0.00
+original_eval_exit=0 2026-04-28T05:05:41Z
+[main 9fdc1c5] record autosota iteration 4 validation
+ 2 files changed, 15 insertions(+)
+ create mode 100644 .autosota_scheduler_test/iter4_validation_state.json

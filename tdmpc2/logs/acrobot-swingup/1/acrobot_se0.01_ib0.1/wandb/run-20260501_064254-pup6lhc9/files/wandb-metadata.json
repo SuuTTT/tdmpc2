@@ -1,0 +1,51 @@
+{
+  "os":  "Linux-6.5.0-41-generic-x86_64-with-glibc2.39",
+  "python":  "CPython 3.12.3",
+  "startedAt":  "2026-05-01T06:42:54.159445Z",
+  "args":  [
+    "task=acrobot-swingup",
+    "model_size=1",
+    "steps=100000",
+    "se_coef=0.01",
+    "ib_coef=0.1",
+    "wandb_entity=sudingli21",
+    "wandb_project=tdmpc2-codex",
+    "exp_name=acrobot_se0.01_ib0.1",
+    "compile=false",
+    "save_video=false"
+  ],
+  "program":  "/workspace/tdmpc2-codex/tdmpc2/train.py",
+  "codePath":  "tdmpc2/train.py",
+  "git":  {
+    "remote":  "https://github.com/SuuTTT/tdmpc2.git",
+    "commit":  "8e884499c45bb357e5a2e579c741f9029e7469b8"
+  },
+  "email":  "1015011749@qq.com",
+  "root":  "/workspace/tdmpc2-codex/tdmpc2/logs/acrobot-swingup/1/acrobot_se0.01_ib0.1",
+  "host":  "ed548af02302",
+  "executable":  "/usr/bin/python3",
+  "cpu_count":  14,
+  "cpu_count_logical":  28,
+  "gpu":  "NVIDIA GeForce RTX 3060",
+  "gpu_count":  1,
+  "disk":  {
+    "/":  {
+      "total":  "34359738368",
+      "used":  "22170865664"
+    }
+  },
+  "memory":  {
+    "total":  "67245780992"
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA GeForce RTX 3060",
+      "memoryTotal":  "12884901888",
+      "cudaCores":  3584,
+      "architecture":  "Ampere",
+      "uuid":  "GPU-07db0b58-04b1-4b4e-5f2a-5375d72ecb77"
+    }
+  ],
+  "cudaVersion":  "12.5",
+  "writerId":  "jt7tfbajbfnmwjqfsq37oqk029au1onu"
+}

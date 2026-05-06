@@ -1,0 +1,7 @@
+timestamp=2026-04-27T21:00:20Z
+pre_commit=df2402b688d9970bb9e84b0653122891f64c69f3
+idea_id=COMPARATOR-M5-50000
+task=dog-run
+model_size=5
+steps=50000
+checkpoint=/workspace/tdmpc2-codex/logs/dog-run/1/iter3_original_m5_steps50000/models/final.pt

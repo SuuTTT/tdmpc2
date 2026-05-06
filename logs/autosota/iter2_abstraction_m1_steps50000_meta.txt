@@ -1,0 +1,7 @@
+timestamp=2026-04-27T14:37:56Z
+pre_commit=80a8697ec487fe446012203deec77f179c3660a0
+idea_id=IDEA-004
+task=dog-run
+model_size=1
+steps=50000
+checkpoint=/workspace/tdmpc2-codex/logs/dog-run/1/iter2_abstraction_m1_steps50000/models/final.pt
