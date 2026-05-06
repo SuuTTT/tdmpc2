@@ -2,6 +2,9 @@
 export MUJOCO_GL=egl
 export WANDB_SILENT=true
 
+# Remove submitit_local from config.yaml to avoid plugin requirement
+sed -i '/submitit_local/d' config.yaml
+
 # Wait for wandb login (if any) or run directly
 ib_values=("0.01" "0.05" "0.1")
 
