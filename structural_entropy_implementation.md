@@ -182,11 +182,17 @@ The live Vast.ai run writes its raw eval CSV here on the remote instance:
 /workspace/tdmpc2-codex/logs/acrobot-swingup/1/vastai_iter8_acrobot_se_m1_steps400000/eval.csv
 ```
 
-A partial copy was exported locally here:
+A synced raw copy is present locally here:
 
 ```text
-results/tdmpc2-codex/acrobot-swingup_se_abstraction_vastai_partial.csv
-results/tdmpc2-codex/acrobot-swingup_se_abstraction_vastai_partial_compare.csv
+remote_results/vastai_rerun_acrobot_se_m1_steps400000/eval.csv
+```
+
+The finalized local exports are:
+
+```text
+results/tdmpc2-codex/acrobot-swingup_se_abstraction_vastai.csv
+results/tdmpc2-codex/acrobot-swingup_se_abstraction_vastai_compare.csv
 ```
 
 The earlier compile run is separate:
@@ -197,29 +203,33 @@ results/tdmpc2-codex/acrobot-swingup_abstraction_compile_compare.csv
 
 That file is from the 4,000,000-step compile-abstraction run, not the current 400,000-step SE run.
 
-## Current Partial Result
+## Synced Final Result
 
-At the last local pull, the current SE run had evaluated through 300k steps:
+The synced final eval CSV contains the following step grid:
 
 ```csv
 step,reward,seed
 0,9.1,1
-100000,374.9,1
-200000,390.6,1
-300000,564.7,1
+100000,385.5,1
+200000,342.1,1
+300000,403.8,1
+400000,329.2,1
 ```
 
-The matching official-format comparison is:
+The matching comparison against the current local official TD-MPC2 CSV is:
 
 ```csv
 step,official_tdmpc2_mean_reward,abstraction_compile_reward,delta,seed
-0,5.2,9.1,3.9,1
-100000,179.1,374.9,195.8,1
-200000,296.3,390.6,94.3,1
-300000,346.9,564.7,217.8,1
+0,7.6,9.1,1.5,1
+100000,112.1,385.5,273.4,1
+200000,219.4,342.1,122.7,1
+300000,350.9,403.8,52.9,1
+400000,283.2,329.2,46.0,1
 ```
 
 The exporter column name still says `abstraction_compile_reward`; that is a naming artifact in the generic exporter and should be renamed before using these CSVs in a paper-style table.
+
+At the final synced step of `400000`, the SE run is ahead of the current local official mean by `46.0` reward points.
 
 ## Interpretation
 

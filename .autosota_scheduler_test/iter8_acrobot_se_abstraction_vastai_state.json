@@ -1,0 +1,12 @@
+{
+  "compare_csv": "/workspace/tdmpc2-codex/results/tdmpc2-codex/acrobot-swingup_se_abstraction_vastai_compare.csv",
+  "decision": "ABSTRACTION_BEATS_OFFICIAL_MEAN",
+  "iteration": 8,
+  "official_mean_reward_at_final_step": 283.2,
+  "phase": "completed",
+  "result_csv": "/workspace/tdmpc2-codex/results/tdmpc2-codex/acrobot-swingup_se_abstraction_vastai.csv",
+  "reward": 329.2,
+  "run_log": "/workspace/vastai-job/job.log",
+  "train_time": null,
+  "updated_at": "2026-05-06T05:09:11Z"
+}
