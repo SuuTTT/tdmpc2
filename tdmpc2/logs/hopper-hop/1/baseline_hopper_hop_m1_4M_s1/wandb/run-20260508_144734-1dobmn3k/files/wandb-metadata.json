@@ -1,0 +1,202 @@
+{
+    "os": "Linux-6.5.0-41-generic-x86_64-with-glibc2.39",
+    "python": "3.9.23",
+    "heartbeatAt": "2026-05-08T14:47:35.475163",
+    "startedAt": "2026-05-08T14:47:34.335641",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "task=hopper-hop",
+        "model_size=1",
+        "steps=4000000",
+        "seed=1",
+        "eval_freq=500000",
+        "se_coef=0.0",
+        "ib_coef=0.0",
+        "compile=false",
+        "save_video=false",
+        "exp_name=baseline_hopper_hop_m1_4M_s1",
+        "wandb_entity=sudingli21",
+        "wandb_project=tdmpc2-codex",
+        "enable_wandb=true"
+    ],
+    "state": "running",
+    "program": "/workspace/tdmpc2-codex/tdmpc2/train.py",
+    "codePathLocal": null,
+    "codePath": "tdmpc2/train.py",
+    "git": {
+        "remote": "https://github.com/SuuTTT/tdmpc2.git",
+        "commit": "21aa49d65880affc3c69a35edfe6ff6595653dc0"
+    },
+    "email": "autosota-codex@example.local",
+    "root": "/workspace/tdmpc2-codex",
+    "host": "ed548af02302",
+    "username": "root",
+    "executable": "/venv/tdmpc2/bin/python",
+    "cpu_count": 14,
+    "cpu_count_logical": 28,
+    "cpu_freq": {
+        "current": 1799.790321428571,
+        "min": 1200.0,
+        "max": 3300.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 1514.541,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 3300.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2000.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1198.122,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2295.454,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2096.946,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2195.086,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1813.883,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1388.751,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2400.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1804.515,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2394.693,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1933.839,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2100.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2293.677,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1500.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2195.086,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2000.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2094.275,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 1200.0,
+            "min": 1200.0,
+            "max": 3300.0
+        },
+        {
+            "current": 2095.257,
+            "min": 1200.0,
+            "max": 3300.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 32.0,
+            "used": 27.017066955566406
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3060",
+            "memory_total": 12884901888
+        }
+    ],
+    "memory": {
+        "total": 62.62751388549805
+    }
+}

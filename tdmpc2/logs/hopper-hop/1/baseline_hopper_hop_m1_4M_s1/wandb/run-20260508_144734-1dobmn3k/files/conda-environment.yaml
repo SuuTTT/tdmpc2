@@ -1,0 +1,5 @@
+name: main
+channels:
+  - nvidia
+  - conda-forge
+prefix: /venv/main
